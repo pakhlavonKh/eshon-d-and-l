@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 
 function CountUpStat({ value, label }: { value: number; label: string }) {
   const [displayValue, setDisplayValue] = useState(0);
+  const [isStarted, setIsStarted] = useState(false);
 
   useEffect(() => {
+    if (!isStarted) return;
+
     const duration = 2000;
     const start = Date.now();
     
@@ -22,13 +25,14 @@ function CountUpStat({ value, label }: { value: number; label: string }) {
     };
     
     requestAnimationFrame(updateCount);
-  }, [value]);
+  }, [isStarted, value]);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      onViewportEnter={() => setIsStarted(true)}
       transition={{ delay: Math.random() * 0.3 }}
       className="glass-card rounded-3xl px-6 py-8 text-left"
     >
