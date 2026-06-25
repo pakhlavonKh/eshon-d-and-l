@@ -1,6 +1,46 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Play, Globe, Shield, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
+import { useEffect, useState } from "react";
+
+function CountUpStat({ value, label }: { value: number; label: string }) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    const duration = 2000;
+    const start = Date.now();
+    
+    const updateCount = () => {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(elapsed / duration, 1);
+      setDisplayValue(Math.floor(value * progress));
+      
+      if (progress < 1) {
+        requestAnimationFrame(updateCount);
+      } else {
+        setDisplayValue(value);
+      }
+    };
+    
+    requestAnimationFrame(updateCount);
+  }, [value]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: Math.random() * 0.3 }}
+      className="text-center space-y-2"
+    >
+      <h3 className="text-4xl md:text-5xl font-black text-white font-heading">
+        {displayValue}
+        {value > 100 ? '+' : ''}
+      </h3>
+      <p className="text-sm md:text-base text-white/50 uppercase tracking-widest font-semibold">{label}</p>
+    </motion.div>
+  );
+}
 
 export default function Home() {
   return (
@@ -12,7 +52,7 @@ export default function Home() {
       className="pb-20"
     >
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center pt-24 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center pt-16 pb-12 overflow-hidden">
         {/* Cinematic Background Elements */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-cinematic-radial opacity-50" />
@@ -21,8 +61,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] opacity-20 mix-blend-overlay" />
         </div>
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
+        <div className="container mx-auto px-6 relative z-10 w-full">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -37,7 +77,7 @@ export default function Home() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-black text-white font-heading leading-[1.1] tracking-tight"
+              className="text-5xl md:text-6xl lg:text-7xl font-black text-white font-heading leading-[1.15] tracking-tight"
             >
               Global Short Dramas.<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary neon-text">
@@ -58,7 +98,7 @@ export default function Home() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
             >
               <Link href="/dramacha" className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-background font-bold text-lg transition-transform hover:scale-105 flex items-center justify-center gap-2">
                 <Play size={20} className="fill-background" /> Explore DramaCha
@@ -75,24 +115,10 @@ export default function Home() {
       <section className="py-20 border-y border-white/5 bg-background/50 backdrop-blur-sm relative z-10">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            {[
-              { value: "50+", label: "Countries Reached" },
-              { value: "10,000+", label: "Episodes Licensed" },
-              { value: "12", label: "Languages Supported" },
-              { value: "100%", label: "Legal Compliance" },
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center space-y-2"
-              >
-                <h3 className="text-4xl md:text-5xl font-black text-white font-heading">{stat.value}</h3>
-                <p className="text-sm md:text-base text-white/50 uppercase tracking-widest font-semibold">{stat.label}</p>
-              </motion.div>
-            ))}
+            <CountUpStat value={50} label="Countries Reached" />
+            <CountUpStat value={10000} label="Episodes Licensed" />
+            <CountUpStat value={12} label="Languages Supported" />
+            <CountUpStat value={100} label="Legal Compliance %" />
           </div>
         </div>
       </section>

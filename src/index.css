@@ -89,11 +89,25 @@
 }
 
 .glass-card {
-  @apply bg-card/40 backdrop-blur-md border border-white/10 shadow-lg;
+  @apply bg-card/45 backdrop-blur-xl border border-white/10 shadow-[0_22px_80px_-30px_rgba(0,0,0,0.65)];
 }
 
 .glass-nav {
   @apply bg-background/60 backdrop-blur-lg border-b border-white/5;
+}
+
+button:focus-visible,
+a:focus-visible {
+  @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-background;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 .neon-glow {
